@@ -1,0 +1,2 @@
+frame,person_x,person_y,chair_x,chair_y,distance,chair_movement,label
+2,969,2197,786,2667,504.36990393955904,0,pickUpChair
