@@ -34,6 +34,9 @@ for folder in folders:
         previous_chair_x = None
         previous_chair_y = None
 
+        previous_person_x = None
+        previous_person_y = None
+
         while True:
 
             success, frame = video.read()
@@ -91,11 +94,8 @@ for folder in folders:
                 chair_center = (chair_x, chair_y)
 
                 if previous_chair_x is None:
-
                     chair_movement = 0
-
                 else:
-
                     chair_movement = math.sqrt(
                         (chair_x - previous_chair_x) ** 2 +
                         (chair_y - previous_chair_y) ** 2
@@ -117,11 +117,21 @@ for folder in folders:
                     )
 
                     if distance < closest_distance:
-
                         closest_distance = distance
                         closest_person = person
 
                 x1, y1, x2, y2, person_x, person_y = closest_person
+
+                if previous_person_x is None:
+                    person_movement = 0
+                else:
+                    person_movement = math.sqrt(
+                        (person_x - previous_person_x) ** 2 +
+                        (person_y - previous_person_y) ** 2
+                    )
+
+                previous_person_x = person_x
+                previous_person_y = person_y
 
                 data.append([
                     frame_number,
@@ -131,6 +141,7 @@ for folder in folders:
                     chair_y,
                     closest_distance,
                     chair_movement,
+                    person_movement,
                     folder
                 ])
 
@@ -178,6 +189,16 @@ for folder in folders:
                     2
                 )
 
+                cv2.putText(
+                    frame,
+                    "Person Movement: " + str(round(person_movement, 2)),
+                    (30, 120),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 255, 0),
+                    2
+                )
+
             cv2.imshow("Person Chair Interaction", frame)
 
             if cv2.waitKey(1) == ord("q"):
@@ -204,6 +225,7 @@ for folder in folders:
                 "chair_y",
                 "distance",
                 "chair_movement",
+                "person_movement",
                 "label"
             ])
 

@@ -3,35 +3,84 @@ import os
 
 folder = "interaction_data"
 
-for filename in os.listdir(folder):
+output_file = "chair_dataset.csv"
 
-    if not filename.endswith(".csv"):
-        continue
+movement_threshold = 5
 
-    path = os.path.join(folder, filename)
+with open(output_file, "w", newline="") as file:
 
-    movements = []
-    distances = []
+    writer = csv.writer(file)
+    print("Writing:", filename)
+    print("Moving frames:", moving_frames)
+    print("Movement ratio:", movement_ratio)
+    writer.writerow([
+        "video",
+        "average_movement",
+        "maximum_movement",
+        "average_distance",
+        "average_person_movement",
+        "maximum_person_movement",
+        "moving_frames",
+        "movement_ratio",
+        "label"
+    ])
 
-    with open(path, "r") as file:
+    for filename in os.listdir(folder):
 
-        reader = csv.DictReader(file)
+        if not filename.endswith(".csv"):
+            continue
 
-        for row in reader:
+        path = os.path.join(folder, filename)
 
-            movements.append(float(row["chair_movement"]))
-            distances.append(float(row["distance"]))
+        movements = []
+        distances = []
+        person_movements = []
 
-    if len(movements) == 0:
-        continue
+        with open(path, "r") as input_file:
 
-    average_movement = sum(movements) / len(movements)
-    maximum_movement = max(movements)
+            reader = csv.DictReader(input_file)
 
-    average_distance = sum(distances) / len(distances)
+            for row in reader:
 
-    print()
-    print(filename)
-    print("Average chair movement:", round(average_movement, 2))
-    print("Maximum chair movement:", round(maximum_movement, 2))
-    print("Average person-chair distance:", round(average_distance, 2))
+                movements.append(float(row["chair_movement"]))
+                distances.append(float(row["distance"]))
+                person_movements.append(float(row["person_movement"]))
+
+        if len(movements) == 0:
+            continue
+
+        average_movement = sum(movements) / len(movements)
+        maximum_movement = max(movements)
+
+        average_distance = sum(distances) / len(distances)
+
+        average_person_movement = sum(person_movements) / len(person_movements)
+        maximum_person_movement = max(person_movements)
+
+        moving_frames = 0
+
+        for movement in movements:
+
+            if movement > movement_threshold:
+                moving_frames += 1
+
+        movement_ratio = moving_frames / len(movements)
+
+        if "pickUpChair" in filename:
+            label = 1
+        else:
+            label = 0
+
+        writer.writerow([
+            filename,
+            average_movement,
+            maximum_movement,
+            average_distance,
+            average_person_movement,
+            maximum_person_movement,
+            moving_frames,
+            movement_ratio,
+            label
+        ])
+
+print("Saved:", output_file)
