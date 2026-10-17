@@ -1,18 +1,17 @@
+
 import csv
 import os
 
 folder = "interaction_data"
-
 output_file = "chair_dataset.csv"
-
 movement_threshold = 5
 
 with open(output_file, "w", newline="") as file:
 
     writer = csv.writer(file)
-    print("Writing:", filename)
-    print("Moving frames:", moving_frames)
-    print("Movement ratio:", movement_ratio)
+
+    print("Writing:", output_file)
+
     writer.writerow([
         "video",
         "average_movement",
@@ -41,7 +40,6 @@ with open(output_file, "w", newline="") as file:
             reader = csv.DictReader(input_file)
 
             for row in reader:
-
                 movements.append(float(row["chair_movement"]))
                 distances.append(float(row["distance"]))
                 person_movements.append(float(row["person_movement"]))
@@ -51,16 +49,16 @@ with open(output_file, "w", newline="") as file:
 
         average_movement = sum(movements) / len(movements)
         maximum_movement = max(movements)
-
         average_distance = sum(distances) / len(distances)
 
-        average_person_movement = sum(person_movements) / len(person_movements)
+        average_person_movement = (
+            sum(person_movements) / len(person_movements)
+        )
         maximum_person_movement = max(person_movements)
 
         moving_frames = 0
 
         for movement in movements:
-
             if movement > movement_threshold:
                 moving_frames += 1
 
@@ -70,6 +68,10 @@ with open(output_file, "w", newline="") as file:
             label = 1
         else:
             label = 0
+
+        print("Video:", filename)
+        print("Moving frames:", moving_frames)
+        print("Movement ratio:", movement_ratio)
 
         writer.writerow([
             filename,
