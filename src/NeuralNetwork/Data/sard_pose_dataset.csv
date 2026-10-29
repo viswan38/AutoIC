@@ -1,0 +1,3 @@
+video,action,sampled_frames,detected_frames,detection_rate,valid_wrist_measurements,valid_elbow_measurements,valid_hip_measurements,valid_body_measurements,average_wrist_movement,maximum_wrist_movement,average_elbow_movement,average_hip_movement,average_body_movement
+5uXSwxx50Tw_0_53_0_55.mp4,Carry object,30,22,0.733,20,20,21,21,0.902384,2.280952,0.840441,0.686255,0.806147
+5uXSwxx50Tw_1_15_1_17.mp4,Carry object,30,30,1.0,29,29,29,29,0.703272,5.538378,0.539116,0.421987,0.484035
